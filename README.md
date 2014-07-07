@@ -5,10 +5,13 @@ An attempt to extend the air quality test box project with more sensors and to p
 
 Check BOM.READ.ME file for list of materials and links.
 
+Include the necessary libraries mentioned in the code which can be found in https://github.com/luisqcosta?tab=repositories
 Feel free to fork and commit changes.
 
 
-Next commits: 
+Check License.txt for more info
+
+Next personal commits: 
 
 Processing code
 
