@@ -68,7 +68,7 @@ static unsigned char LCAlogo[] PROGMEM = {
   0x07, 0x03, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
-int pin = 8;
+int pin = 8;  //inititalizing digital pin 8, dust sensor
 unsigned long duration;
 unsigned long starttime;
 unsigned long sampletime_ms = 5000;
@@ -77,8 +77,8 @@ float ratio = 0;
 float concentration = 0;
 int sensorValue = 0;
 
-#define DHTPIN A2
-#define DHTTYPE DHT11
+#define DHTPIN A2  //defining temp and humi sensor analog pin
+#define DHTTYPE DHT11  //define the type of sensor. check the specsheet and seeed wiki
 DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
@@ -93,12 +93,12 @@ void setup() {
   delay(3000);
   SeeedOled.clearDisplay();
 
-  Serial.begin(9600);
+  Serial.begin(9600); //seting the serial speed. if including more sensors increase to a standard value. not needed at the moment as overall sampling speed is +/-5 secs
   pinMode(8, INPUT);
   starttime = millis();
 
-  Serial.println("Air Quality Gizmo by LMO");
-  Serial.println("Time s, Humidity %, Temperature C, PM ug/m^3, VOC mg/L, Hydrocarbs mg/m^3");
+  Serial.println("Air Quality Gizmo by LMO"); 
+  Serial.println("Time s, Humidity %, Temperature C, PM ug/m^3, VOC mg/L, Hydrocarbs mg/m^3");  //header of the text file; can be imported as csv in excell
 
   dht.begin();
 
@@ -129,7 +129,7 @@ void loop() {
   float t = dht.readTemperature();
 
   {
-    Serial.print(millis()/1000);
+    Serial.print(millis()/1000);  // elapsed seconds since boot
     Serial.print(",");
     Serial.print(h,1);
     Serial.print(",");
@@ -141,6 +141,9 @@ void loop() {
     Serial.print(",");
     Serial.print(vol_Formol,3);
     Serial.println("");
+    
+    // no need to include any SD library as Open Hardware SD Logger works as a standalone arduino and records all serial output
+    
   }
   {
     SeeedOled.clearDisplay();
@@ -158,14 +161,14 @@ void loop() {
     SeeedOled.setTextXY(4, 8);
     SeeedOled.putString("mg/m^3");
 
-    SeeedOled.setTextXY(5, 1);
+    SeeedOled.setTextXY(5, 1); // location of text , fifth row, first collumn
     SeeedOled.putString("Volatile OC:");
     SeeedOled.setTextXY(6, 1); // location to display variable
     SeeedOled.putFloat(vol,3); // variable to display
     SeeedOled.setTextXY(6, 8);
     SeeedOled.putString("mg/L");
 
-    delay(2000);
+    delay(2000); // screen delay to allow reading in the OLED
 
     SeeedOled.clearDisplay();
     SeeedOled.setTextXY(1, 1);
