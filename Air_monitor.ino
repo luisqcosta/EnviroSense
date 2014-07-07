@@ -71,7 +71,7 @@ static unsigned char LCAlogo[] PROGMEM = {
 int pin = 8;
 unsigned long duration;
 unsigned long starttime;
-unsigned long sampletime_ms = 1000;
+unsigned long sampletime_ms = 5000;
 unsigned long lowpulseoccupancy = 0;
 float ratio = 0;
 float concentration = 0;
@@ -87,7 +87,6 @@ void setup() {
   DDRB |= 0x21;
   PORTB |= 0x21;
 
-
   SeeedOled.setNormalDisplay();          // Set normal display
   SeeedOled.clearDisplay();               // clear the screen and set start position to top left corner
   SeeedOled.drawBitmap(LCAlogo, 1024);  // 1024 = 128 Pixels * 64 Pixels / 8
@@ -99,7 +98,7 @@ void setup() {
   starttime = millis();
 
   Serial.println("Air Quality Gizmo by LMO");
-  Serial.println("Humidity %, Temperature C, PM ug/m^3, VOC mg/L, Hydrocarbs mg/m^3.");
+  Serial.println("Time s, Humidity %, Temperature C, PM ug/m^3, VOC mg/L, Hydrocarbs mg/m^3");
 
   dht.begin();
 
@@ -126,58 +125,65 @@ void loop() {
     starttime = millis();
   }
 
-  float h = dht.readHumidity();
+  float h = dht.readHumidity(); //sensor pooling time of 2 seconds (both temp and humi)
   float t = dht.readTemperature();
 
   {
-    Serial.print(h);
+    Serial.print(millis()/1000);
     Serial.print(",");
-    Serial.print(t);
+    Serial.print(h,1);
     Serial.print(",");
-    Serial.print(concentration / 500);
+    Serial.print(t,1);
     Serial.print(",");
-    Serial.print(vol);
+    Serial.print(concentration / 500,3);
     Serial.print(",");
-    Serial.print(vol_Formol);
-    Serial.println(".");
+    Serial.print(vol,3);
+    Serial.print(",");
+    Serial.print(vol_Formol,3);
+    Serial.println("");
   }
   {
     SeeedOled.clearDisplay();
     SeeedOled.setTextXY(1, 1);
     SeeedOled.putString("Particulates:");
     SeeedOled.setTextXY(2, 1);
-    SeeedOled.putFloat(concentration / 500);
+    SeeedOled.putFloat((concentration / 500),3);
     SeeedOled.setTextXY(2, 8);
     SeeedOled.putString("ug/m^3");
 
     SeeedOled.setTextXY(3, 1);
     SeeedOled.putString("Hydrocarbons:");
     SeeedOled.setTextXY(4, 1);
-    SeeedOled.putFloat(vol_Formol/1000);
+    SeeedOled.putFloat(vol_Formol,3);
     SeeedOled.setTextXY(4, 8);
-    SeeedOled.putString("mg/dm^3");
+    SeeedOled.putString("mg/m^3");
 
     SeeedOled.setTextXY(5, 1);
     SeeedOled.putString("Volatile OC:");
     SeeedOled.setTextXY(6, 1); // location to display variable
-    SeeedOled.putFloat(vol); // variable to display
+    SeeedOled.putFloat(vol,3); // variable to display
     SeeedOled.setTextXY(6, 8);
     SeeedOled.putString("mg/L");
 
     delay(2000);
 
     SeeedOled.clearDisplay();
+    SeeedOled.setTextXY(1, 1);
+    SeeedOled.putString("Elapsed Time");
     SeeedOled.setTextXY(2, 1);
-    SeeedOled.putString("Humidity:");
+    SeeedOled.putFloat(millis()/60000,0);
+    SeeedOled.setTextXY(2, 7);
+    SeeedOled.putString("minutes");
     SeeedOled.setTextXY(3, 1);
-    SeeedOled.putFloat(h);
-    SeeedOled.setTextXY(3, 7);
+    SeeedOled.putString("Humidity:");
+    SeeedOled.setTextXY(4, 1);
+    SeeedOled.putFloat(h,1);
+    SeeedOled.setTextXY(4, 7);
     SeeedOled.putString("%");
-
     SeeedOled.setTextXY(5, 1);
     SeeedOled.putString("Temperature:");
     SeeedOled.setTextXY(6, 1);
-    SeeedOled.putFloat(t);
+    SeeedOled.putFloat(t,1);
     SeeedOled.setTextXY(6, 7);
     SeeedOled.putString("C");
   }
