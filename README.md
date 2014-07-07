@@ -12,15 +12,20 @@ Feel free to fork and commit changes.
 
 Check License.txt for more info
 
-
+=============================
 
 Next personal commits: 
 
 Processing code
+
 RTC sensor
+
 Loudness sensor
 
+Battery duration (2200mAh) for information purposes only
 
+
+=============================
 Luis Oliveira
 
 luiolive(at)vub.ac.be
