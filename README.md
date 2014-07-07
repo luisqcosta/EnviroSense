@@ -22,8 +22,6 @@ RTC sensor
 
 Loudness sensor
 
-Battery duration (2200mAh) for information purposes only
-
 
 =============================
 Luis Oliveira
