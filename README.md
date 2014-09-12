@@ -18,7 +18,7 @@ Next personal commits:
 
 Processing code
 
-RTC sensor (ready to inplement, just need a weird cell battery :)  )
+RTC sensor (ready to implement, just need a weird cell battery :)  )
 
 =============================
 Luis Oliveira
