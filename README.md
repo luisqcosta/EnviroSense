@@ -18,10 +18,7 @@ Next personal commits:
 
 Processing code
 
-RTC sensor
-
-Loudness sensor
-
+RTC sensor (ready to inplement, just need a weird cell battery :)  )
 
 =============================
 Luis Oliveira
