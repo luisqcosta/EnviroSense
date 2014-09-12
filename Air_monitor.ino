@@ -1,8 +1,9 @@
-#include <DS1307.h>
-#include <Wire.h>
-#include <SeeedOLED.h>
-#include "DHT.h"
+#include <DS1307.h> // RTC Library
+#include <Wire.h> // I2C Communication Library
+#include <SeeedOLED.h> // OLED Library
+#include "DHT.h" // Temperature and Humidity Sensor Library
 #include <avr/pgmspace.h>
+// no need to include any SD library as Open Hardware SD Logger works as a standalone arduino and records all serial output
 
 static unsigned char LCAlogo[] PROGMEM = {
 0x00, 0x00, 0x00, 0x00, 0xC0, 0xE0, 0x60, 0x60, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -73,13 +74,13 @@ static unsigned char LCAlogo[] PROGMEM = {
 
 //initialization
 
-int pin = 8; //inititalizing digital pin 8, dust sensor
-unsigned long duration;
-unsigned long starttime;
-unsigned long sampletime_ms = 30000;
-unsigned long lowpulseoccupancy = 0;
-float ratio = 0;
-float concentration = 0;
+int pin = 8; //inititalizing digital pin D8, dust sensor
+unsigned long duration; //Dust sensor variable
+unsigned long starttime; //Dust sensor variable
+unsigned long sampletime_ms = 30000; //lower sampling rate provides erratic results
+unsigned long lowpulseoccupancy = 0; //Dust sensor variable
+float ratio = 0; //Dust sensor variable
+float concentration = 0; //Dust sensor variable
 int sensorValueA = 0; //Ch4 sensor A0
 int sensorValueB = 0; //VOC sensor A1
 int sensorValueC = 0; //loudness sensor A2
@@ -106,7 +107,7 @@ Serial.begin(9600); //seting the serial speed. if including more sensors increas
 
 starttime = millis();
 Serial.println("Air Quality Gizmo by LMO");
-Serial.println("Time s, Humidity %, Temperature C, PM ug/m^3, VOC mg/m^3, Hydrocarbs mg/dm^3, Sound Pressure %"); //header of the text file; can be imported as csv in excell
+Serial.println("Time s, Humidity %, Temperature C, PM ug/m^3, VOC mg/m^3, Methane mg/dm^3, Sound Pressure %"); //header of the text file; can be imported as csv in excell
 dht.begin();
 }
 
@@ -139,6 +140,8 @@ starttime = millis();
 float h = dht.readHumidity(); //sensor pooling time of 2 seconds (both temp and humi)
 float t = dht.readTemperature();
 
+
+//Print to Serial Port Begin
 {
 Serial.print(millis()/1000); // elapsed seconds since boot
 Serial.print(",");
@@ -154,28 +157,27 @@ Serial.print(vol_meth,3);
 Serial.print(",");
 Serial.print(vol_loud,3);
 Serial.println("");
-
-// no need to include any SD library as Open Hardware SD Logger works as a standalone arduino and records all serial output
 }
+//Print to Serial Port End
 {
 SeeedOled.clearDisplay();
 SeeedOled.setTextXY(1, 1);
 SeeedOled.putString("Particulates:");
 SeeedOled.setTextXY(2, 1);
 SeeedOled.putFloat((concentration / 500),4);
-SeeedOled.setTextXY(2, 8);
+SeeedOled.setTextXY(2, 9);
 SeeedOled.putString("ug/m^3");
 SeeedOled.setTextXY(3, 1);
 SeeedOled.putString("Volatile OC:");
 SeeedOled.setTextXY(4, 1);
 SeeedOled.putFloat(vol_voc,4);
-SeeedOled.setTextXY(4, 8);
+SeeedOled.setTextXY(4, 9);
 SeeedOled.putString("mg/m^3");
 SeeedOled.setTextXY(5, 1); // location of text , fifth row, first collumn
 SeeedOled.putString("Methane:");
 SeeedOled.setTextXY(6, 1); // location to display variable
 SeeedOled.putFloat(vol_meth,4); // variable to display
-SeeedOled.setTextXY(6, 8);
+SeeedOled.setTextXY(6, 9);
 SeeedOled.putString("mg/dm^3");
 
 delay(2000); // screen delay to allow reading in the OLED
@@ -196,7 +198,7 @@ SeeedOled.putString("%");
 SeeedOled.setTextXY(5, 1);
 SeeedOled.putString("Temperature:");
 SeeedOled.setTextXY(6, 1);
-SeeedOled.putFloat(t,1);
+SeeedOled.putFloat(t - 2 ,1); // -2 because of sensor correction. The DHT11 is not "that" accurate. Try DHT22.
 SeeedOled.setTextXY(6, 7);
 SeeedOled.putString("C");
 }
