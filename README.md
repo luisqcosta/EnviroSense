@@ -1,4 +1,4 @@
-Indoor Air Quality Assessment Device
+EnviroSense - Indoor/Outdor Air Quality Assessment Device
 =============================
 
 An attempt to extend the air quality test box project with more sensors and to provide an autonomous quality using solar panels.
