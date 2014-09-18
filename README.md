@@ -5,7 +5,7 @@ An attempt to extend the air quality test box project with more sensors and to p
 
 Check BOM.READ.ME file for list of materials and links. UPDATED 12/09/2014
 
-IMPORTANT Include the necessary libraries mentioned in the code (TOP SECTION of *.ino file) which can be found in https://github.com/luisqcosta?tab=repositories
+IMPORTANT Include the necessary libraries mentioned in the code (TOP SECTION of *.ino file). Check the respective folders above.
 
 
 Feel free to fork and commit changes (drop me an email and ill make you a contributor first).
