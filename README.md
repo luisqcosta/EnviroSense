@@ -20,6 +20,8 @@ Processing code
 
 RTC sensor (ready to implement, just need a weird cell battery :)  )
 
+All-in-one package (shield with all sensors (withou PM, it's too big!) )
+
 =============================
 Luis Oliveira
 
